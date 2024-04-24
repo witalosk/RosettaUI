@@ -185,6 +185,26 @@ namespace RosettaUI
         }
         
         #endregion
+
+        #region Concrete Type
+        
+        private static readonly Dictionary<Type, List<Type>> ConcreteTypeCacheTable = new();
+
+        public static IEnumerable<Type> GetConcreteTypesFromAbstractType(Type abstractType)
+        {
+            if (!ConcreteTypeCacheTable.TryGetValue(abstractType, out var cache))
+            {
+                cache = Assembly.GetAssembly(abstractType).GetTypes()
+                    .Where(c => c.GetInterfaces().Any(t => t == abstractType) && c.IsClass && !c.IsGenericType && !c.IsAbstract)
+                    .OrderBy(t => t.Name).ToList();
+
+                ConcreteTypeCacheTable[abstractType] = cache;
+            }
+
+            return cache;
+        }
+
+        #endregion
         
         
         #region Type Define

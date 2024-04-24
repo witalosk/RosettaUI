@@ -1,6 +1,8 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using UnityEngine;
 using UnityEngine.Assertions;
 
@@ -39,6 +41,7 @@ namespace RosettaUI
                 _ when TypeUtility.IsNullable(valueType) => CreateNullableFieldElement(label, binder, option),
                 _ when typeof(IElementCreator).IsAssignableFrom(valueType) => CreateElementCreatorElement(label, binder),
                 _ when ListBinder.IsListBinder(binder) => CreateListView(label, binder),
+                _ when valueType.IsAbstract && !valueType.IsAssignableFrom(typeof(MonoBehaviour)) => CreateAbstractFieldElement(label, binder),
 
                 _ => UI.NullGuardIfNeed(label, binder, () => CreateMemberFieldElement(label, binder, optionCaptured))
             };
@@ -191,6 +194,36 @@ namespace RosettaUI
                 {
                     new HelpBoxElement($"[{type}] Circular reference detected.", HelpBoxType.Error)
                 }).SetInteractable(false);
+        }
+
+        private static Element CreateAbstractFieldElement(LabelElement label, IBinder binder)
+        {
+            var fieldType = binder.ValueType;
+            
+            var candidateTypes = TypeUtility.GetConcreteTypesFromAbstractType(fieldType).ToList();
+            if (candidateTypes.Count < 1)
+            {
+                return new CompositeFieldElement(label,
+                    new[]
+                    {
+                        new HelpBoxElement($"[{fieldType}] No concrete type found.", HelpBoxType.Error)
+                    }).SetInteractable(false);
+            }
+
+            object obj = binder.GetObject();
+            int selectedIdx = obj == null ? 0 : candidateTypes.IndexOf(obj.GetType()) + 1;
+            return UI.Fold(
+                label,
+                UI.Dropdown(null, () => selectedIdx, idx =>
+                    {
+                        obj = idx == 0 ? null : Activator.CreateInstance(candidateTypes[idx - 1]);
+                        binder.SetObject(obj);
+                        selectedIdx = idx;
+                    },
+                    new []{ "<null>" }.Concat(candidateTypes.Select(t => t.Name))
+                ),
+                new[] { UI.DynamicElementOnStatusChanged(() => selectedIdx, idx => idx == 0 ? null : UI.Field(null, Binder.Create(obj, obj.GetType()))) }
+            );
         }
     }
 }

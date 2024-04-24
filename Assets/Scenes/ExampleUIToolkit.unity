@@ -524,9 +524,14 @@ MonoBehaviour:
   simpleClass:
     floatValue: 0
     stringValue: 
+  serializeReferenceClass:
+    rid: 5014202388692336645
   classList:
   - floatValue: 1
     stringValue: First
+  serializeReferenceClassList:
+  - rid: 5014202388692336646
+  - rid: 5014202388692336647
   attributeExampleClass:
     headerInt: 0
     rangeFloat: 50
@@ -538,6 +543,21 @@ MonoBehaviour:
       string'
     nonReorderableList: 010000000200000003000000
     hideInInspectorVector2: {x: 0, y: 0}
+  references:
+    version: 2
+    RefIds:
+    - rid: 5014202388692336645
+      type: {class: SerializeReferenceClassA, ns: RosettaUI.Example, asm: Assembly-CSharp}
+      data:
+        floatValue: 1
+    - rid: 5014202388692336646
+      type: {class: SerializeReferenceClassA, ns: RosettaUI.Example, asm: Assembly-CSharp}
+      data:
+        floatValue: 1
+    - rid: 5014202388692336647
+      type: {class: SerializeReferenceClassB, ns: RosettaUI.Example, asm: Assembly-CSharp}
+      data:
+        stringValue: second
 --- !u!1 &705507993
 GameObject:
   m_ObjectHideFlags: 0

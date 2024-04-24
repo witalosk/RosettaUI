@@ -17,4 +17,18 @@ namespace RosettaUI.Example
         public string stringValue;
         private int _privateValue; // will be ignored
     }
+
+    public interface ISerializeReferenceObject { }
+    
+    [Serializable]
+    public class SerializeReferenceClassA : ISerializeReferenceObject
+    {
+        public float floatValue;
+    }
+    
+    [Serializable]
+    public class SerializeReferenceClassB : ISerializeReferenceObject
+    {
+        public string stringValue;
+    }
 }

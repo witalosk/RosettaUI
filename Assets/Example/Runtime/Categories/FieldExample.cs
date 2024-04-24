@@ -51,10 +51,18 @@ namespace RosettaUI.Example
         public List<int> intList = new(new[] {1, 2, 3});
         public float[] floatArray = {1f, 2f, 3f};
         public SimpleClass simpleClass;
-
+        [SerializeReference] public ISerializeReferenceObject serializeReferenceClass = new SerializeReferenceClassA();
+        
         public List<SimpleClass> classList = new[]
         {
             new SimpleClass {floatValue = 1f, stringValue = "First"}
+        }.ToList();
+        
+        [SerializeReference]
+        public List<ISerializeReferenceObject> serializeReferenceClassList = new List<ISerializeReferenceObject>
+        {
+            new SerializeReferenceClassA() { floatValue = 1f },
+            new SerializeReferenceClassB() { stringValue = "second" }
         }.ToList();
         
         [FormerlySerializedAs("attributeTestClass")] public AttributeExampleClass attributeExampleClass;
@@ -87,7 +95,9 @@ namespace RosettaUI.Example
                     UI.Field(() => intList),
                     UI.Field(() => floatArray),
                     UI.Field(() => simpleClass),
-                    UI.Field(() => classList)
+                    UI.Field(() => serializeReferenceClass),
+                    UI.Field(() => classList),
+                    UI.Field(() => serializeReferenceClassList)
                 ),
                 ExampleTemplate.UIFunctionTab(nameof(UI.FieldReadOnly),
                     UI.FieldReadOnly(() => intValue),
@@ -111,7 +121,9 @@ namespace RosettaUI.Example
                     UI.FieldReadOnly(() => intList),
                     UI.FieldReadOnly(() => floatArray),
                     UI.FieldReadOnly(() => simpleClass),
-                    UI.FieldReadOnly(() => classList)
+                    UI.FieldReadOnly(() => serializeReferenceClass),
+                    UI.FieldReadOnly(() => classList),
+                    UI.FieldReadOnly(() => serializeReferenceClassList)
                 ),
                 ExampleTemplate.Tab("Codes",
                     ExampleTemplate.CodeElementSets("Argument",
