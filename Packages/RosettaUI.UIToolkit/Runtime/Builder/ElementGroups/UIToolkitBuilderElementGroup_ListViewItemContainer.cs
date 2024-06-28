@@ -64,6 +64,9 @@ namespace RosettaUI.UIToolkit.Builder
                 // ListView 内での参照先変更を通知
                 listView.itemsSourceChanged += OnItemsSourceChanged;
 
+                // ListView の+ボタンを押したときの挙動
+                listView.createNewInstance = itemContainerElement.CreateNewInstance;
+
                 viewBridge.onUnsubscribe += () =>
                 {
                     listView.itemsRemoved -= OnItemsAdded;

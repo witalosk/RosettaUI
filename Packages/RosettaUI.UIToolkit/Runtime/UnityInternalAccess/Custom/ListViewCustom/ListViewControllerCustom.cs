@@ -1,4 +1,6 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using UnityEngine;
 using UnityEngine.Pool;
 using UnityEngine.UIElements;
 
@@ -15,6 +17,7 @@ namespace RosettaUI.UIToolkit.UnityInternalAccess
     internal class ListViewControllerCustom : ListViewController
 #endif
     {
+        public Func<object> createNewInstance { get; set; } = null;
         
 #if !UNITY_2022_1_OR_NEWER
         public virtual int GetItemsCount()
@@ -36,7 +39,10 @@ namespace RosettaUI.UIToolkit.UnityInternalAccess
                 var itemType = ListUtility.GetItemType(type);
                 for (var i = 0; i < itemCount; ++i)
                 {
-                    itemsSource = ListUtility.AddItemAtLast(itemsSource, type, itemType);
+                    itemsSource = createNewInstance == null 
+                        ? ListUtility.AddCopiedItemAtLast(itemsSource, type, itemType)
+                        : ListUtility.AddItemAtLast(itemsSource, type, itemType, createNewInstance.Invoke());
+                    
                     intList.Add(previousCount + i);
                 }
                 

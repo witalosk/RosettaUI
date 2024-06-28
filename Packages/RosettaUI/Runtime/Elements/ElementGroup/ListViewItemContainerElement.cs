@@ -30,6 +30,7 @@ namespace RosettaUI
     {
         private readonly IBinder _binder;
         public readonly ListViewOption option;
+        public Func<object> CreateNewInstance { get; set; } = null;
         
         private readonly Func<IBinder, int, Element> _createItemElement;
         private readonly BinderHistory.Snapshot _binderTypeHistorySnapshot;
@@ -60,15 +61,16 @@ namespace RosettaUI
                     }
                 }
 
-                ListBinder.SetCount(_binder, value);
+                ListBinder.SetCount(_binder, value, CreateNewInstance);
                 NotifyListChangedToView();
             }
         }
 
-        public ListViewItemContainerElement(IBinder listBinder, Func<IBinder, int, Element> createItemElement, in ListViewOption option) : base(null)
+        public ListViewItemContainerElement(IBinder listBinder, Func<IBinder, int, Element> createItemElement, Func<object> createNewInstance, in ListViewOption option) : base(null)
         {
             _binder = listBinder;
             _createItemElement = createItemElement;
+            this.CreateNewInstance = createNewInstance;
             this.option = option;
 
             Interactable = !ListBinder.IsReadOnly(listBinder);

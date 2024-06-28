@@ -12,18 +12,30 @@ namespace RosettaUI.UIToolkit.UnityInternalAccess
     /// 
     ///  Add item
     ///  - avoid error when IList item is ValueType
-    ///  - duplicate a previous item
+    ///  - duplicate a previous item or execute callback when + button clicked
     /// 
     ///  Support for external List changes
     /// </summary>
     public class ListViewCustom : ListView
     {
+        public Func<object> createNewInstance { get; set; }
+        
         #region Avoid error when IList item is ValueType
         
 #if UNITY_2022_2_OR_NEWER
-        protected override CollectionViewController CreateViewController() => new ListViewControllerCustom();
+        protected override CollectionViewController CreateViewController()
+        {
+            var controller = new ListViewControllerCustom();
+            controller.createNewInstance = createNewInstance;
+            return controller;
+        }
 #else
-        private protected override void CreateViewController() => SetViewController(new ListViewControllerCustom());
+        private protected override void CreateViewController()
+        {
+            var controller = new ListViewControllerCustom();
+            controller.createNewInstance = createNewInstance;
+            SetViewController(controller);
+        }
 #endif
 
         #endregion

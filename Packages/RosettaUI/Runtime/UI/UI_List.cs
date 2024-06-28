@@ -15,15 +15,16 @@ namespace RosettaUI
             in ListViewOption option
         )
             where TList : IList
-            => List(ExpressionUtility.CreateLabelString(targetExpression), targetExpression, null, option);
+            => List(ExpressionUtility.CreateLabelString(targetExpression), targetExpression, null, null, option);
 
         public static Element List<TList>(
             Expression<Func<TList>> targetExpression,
             Func<IBinder, int, Element> createItemElement = null,
+            Func<object> createNewInstance = null,
             in ListViewOption? option = null
         )
             where TList : IList
-            => List(ExpressionUtility.CreateLabelString(targetExpression), targetExpression, createItemElement, option);
+            => List(ExpressionUtility.CreateLabelString(targetExpression), targetExpression, createItemElement, createNewInstance, option);
 
         public static Element List<TList>(
             LabelElement label,
@@ -31,12 +32,13 @@ namespace RosettaUI
             in ListViewOption option
         )
             where TList : IList
-            => List(label, targetExpression, null, option);
+            => List(label, targetExpression, null, null, option);
 
         public static Element List<TList>(
             LabelElement label,
             Expression<Func<TList>> targetExpression,
             Func<IBinder, int, Element> createItemElement = null,
+            Func<object> createNewInstance = null,
             in ListViewOption? option = null
         )
             where TList : IList
@@ -45,6 +47,7 @@ namespace RosettaUI
                 label,
                 ExpressionUtility.CreateBinder(targetExpression),
                 createItemElement,
+                createNewInstance,
                 option ?? CalcDefaultOptionOf(targetExpression)
             );
         }
@@ -60,7 +63,7 @@ namespace RosettaUI
             in ListViewOption option
         )
             where TList : IList
-            => List(targetExpression, writeValue, null, option);
+            => List(targetExpression, writeValue, null, null, option);
         
         public static Element List<TList>(
             LabelElement label,
@@ -69,12 +72,13 @@ namespace RosettaUI
             in ListViewOption option
         )
             where TList : IList
-            => List(label, readValue, writeValue, null, option);
+            => List(label, readValue, writeValue, null, null, option);
 
         public static Element List<TList>(
             Expression<Func<TList>> targetExpression,
             Action<TList> writeValue,
             Func<IBinder, int, Element> createItemElement = null,
+            Func<object> createNewInstance = null,
             in ListViewOption? option = null
         )
             where TList : IList
@@ -84,6 +88,7 @@ namespace RosettaUI
                 targetExpression.Compile(), 
                 writeValue,
                 createItemElement, 
+                createNewInstance,
                 option ?? CalcDefaultOptionOf(targetExpression));
         }
 
@@ -92,10 +97,11 @@ namespace RosettaUI
             Func<TList> readValue,
             Action<TList> writeValue,
             Func<IBinder, int, Element> createItemElement = null,
+            Func<object> createNewInstance = null,
             in ListViewOption? option = null
         )
             where TList : IList
-            => List(label, Binder.Create(readValue, writeValue), createItemElement, option);
+            => List(label, Binder.Create(readValue, writeValue), createItemElement, createNewInstance, option);
 
         #endregion
 
@@ -120,6 +126,7 @@ namespace RosettaUI
                 ExpressionUtility.CreateLabelString(targetExpression),
                 UIInternalUtility.CreateReadOnlyBinder(targetExpression),
                 createItemElement, 
+                null,
                 option ?? CalcDefaultOptionOf(targetExpression));
         }
 
@@ -140,24 +147,25 @@ namespace RosettaUI
             where TList : IList
         {
             var binder = Binder.Create(readValue, null);
-            return List(label, binder, createItemElement, option);
+            return List(label, binder, createItemElement, null, option);
         }
         
         #endregion
 
 
         #region Core
+        
 
-        public static Element List(LabelElement label, IBinder listBinder, Func<IBinder, int, Element> createItemElement = null, in ListViewOption? optionNullable = null)
+        public static Element List(LabelElement label, IBinder listBinder, Func<IBinder, int, Element> createItemElement = null, Func<object> createNewInstance = null, in ListViewOption? optionNullable = null)
         {
             var option = optionNullable ?? ListViewOption.Default;
 
-            var listItemContainer = ListItemContainer(listBinder, createItemElement, option);
+            var listItemContainer = ListItemContainer(listBinder, createItemElement, createNewInstance, option);
             var ret = listItemContainer;
             
             if (option.header)
             {
-                var countField = ListCounterField(listBinder, listItemContainer, option);
+                var countField = ListCounterField(listBinder, listItemContainer, createNewInstance, option);
 
                 ret = Fold(
                     label, countField,
@@ -173,7 +181,7 @@ namespace RosettaUI
             return ret;
         }
 
-        public static Element ListCounterField(IBinder listBinder,　Element itemContainerElement, in ListViewOption option)
+        public static Element ListCounterField(IBinder listBinder,　Element itemContainerElement, Func<object> createNewInstance, in ListViewOption option)
         {
             var interactable = !ListBinder.IsReadOnly(listBinder) && !option.fixedSize;
             
@@ -190,18 +198,19 @@ namespace RosettaUI
                     }
                     else
                     {
-                        ListBinder.SetCount(listBinder, count);
+                        ListBinder.SetCount(listBinder, count, createNewInstance);
                     }
                 }).SetMinWidth(50f).SetInteractable(interactable);
         }
         
-        private static Element ListItemContainer(IBinder listBinder, Func<IBinder, int, Element> createItemElement, in ListViewOption option)
+        private static Element ListItemContainer(IBinder listBinder, Func<IBinder, int, Element> createItemElement, Func<object> createNewInstance, in ListViewOption option)
         {
             var optionCaptured = option;
             return NullGuard(null, listBinder,
                 () => new ListViewItemContainerElement(
                     listBinder,
                     createItemElement ?? ListItemDefault,
+                    createNewInstance,
                     optionCaptured)
             );
         }

@@ -9,11 +9,7 @@ namespace RosettaUI
         public static Element CreateAbstractFieldElement(LabelElement label, IBinder binder, bool typeChangeable = false, FieldOption? option = null)
         {
             var valueType = binder.ValueType;
-
-            if (BinderHistory.IsCircularReference(binder))
-            {
-                return CreateCircularReferenceElement(label, valueType);
-            }
+            
             if (ListBinder.IsListBinder(binder) && ListUtility.GetItemType(valueType).IsAbstract)
             {
                 return CreateAbstractListView(label, binder, typeChangeable);
@@ -59,7 +55,7 @@ namespace RosettaUI
                 )
                 : ListViewOption.Default;
 
-            return UI.List(label, binder, (b, i)=> UI.AbstractField($"Item {i}", b, typeChangeable), option);
+            return UI.List(label, binder, (b, i)=> UI.AbstractField($"Item {i}", b, typeChangeable), () => null, option);
         }
     }
 }

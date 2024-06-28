@@ -24,15 +24,22 @@ namespace RosettaUI
             }
 
             return itemType;
-        } 
+        }
         
-        public static IList AddItemAtLast(IList list, Type type, Type itemType)
+        public static IList AddItemAtLast(IList list, Type type, Type itemType, object elem)
+        {
+            list ??= (IList) Activator.CreateInstance(type);
+            
+            return AddItem(list, itemType, elem, list.Count);
+        }
+        
+        public static IList AddCopiedItemAtLast(IList list, Type type, Type itemType)
         {
             list ??= (IList) Activator.CreateInstance(type);
 
             var baseItem = list.Count > 0 ? list[^1] : null;
 
-            return AddItem(list, itemType, baseItem, list.Count);
+            return AddCopiedItem(list, itemType, baseItem, list.Count);
         }
 
         public static IList RemoveItemAtLast(IList target, Type itemType)
@@ -40,25 +47,29 @@ namespace RosettaUI
             return RemoveItem(target, itemType, target.Count - 1);
         }
 
-        public static IList AddItem(IList list, Type elemType, object baseItem, int index)
+        public static IList AddItem(IList list, Type elemType, object elem, int index)
         {
             index = Mathf.Clamp(index, 0, list.Count);
-            var newElem = CreateNewItem(baseItem, elemType);
-
+        
             if (list is Array array)
             {
                 var newArray = Array.CreateInstance(elemType, array.Length + 1);
                 Array.Copy(array, newArray, index);
-                newArray.SetValue(newElem, index);
+                newArray.SetValue(elem, index);
                 Array.Copy(array, index, newArray, index + 1, array.Length - index);
                 list = newArray;
             }
             else
             {
-                list.Insert(index, newElem);
+                list.Insert(index, elem);
             }
 
             return list;
+        }
+        
+        public static IList AddCopiedItem(IList list, Type elemType, object baseItem, int index)
+        {
+            return AddItem(list, elemType, CreateNewItem(baseItem, elemType), index);
         }
 
         public static IList RemoveItem(IList list, Type itemType, int index)

@@ -38,7 +38,7 @@ namespace RosettaUI
                 _ when valueType.IsEnum => CreateEnumElement(label, binder),
                 _ when TypeUtility.IsNullable(valueType) => CreateNullableFieldElement(label, binder, option),
                 _ when typeof(IElementCreator).IsAssignableFrom(valueType) => CreateElementCreatorElement(label, binder),
-                _ when ListBinder.IsListBinder(binder) && ListUtility.GetItemType(valueType).IsAbstract => CreateListView(label, binder),
+                _ when ListBinder.IsListBinder(binder) && ListUtility.GetItemType(valueType).IsAbstract => CreateAbstractListView(label, binder),
                 _ when ListBinder.IsListBinder(binder) => CreateListView(label, binder),
                 _ when valueType.IsAbstract => CreateAbstractFieldElement(label, binder, false, option),
 
@@ -114,7 +114,7 @@ namespace RosettaUI
                 : ListViewOption.Default;
 
 
-            return UI.List(label, binder, null, option);
+            return UI.List(label, binder, null, null, option);
         }
 
         private static Element CreateMemberFieldElement(LabelElement label, IBinder binder, in FieldOption option)

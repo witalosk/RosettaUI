@@ -54,13 +54,13 @@ namespace RosettaUI
             return GetIList(binder)?.Count ?? 0;
         }
 
-        public static void SetCount(IBinder binder, int count)
+        public static void SetCount(IBinder binder, int count, Func<object> createNewInstance)
         {
             var current = GetCount(binder);
             var diff = count - current;
             for (var i = 0; i < diff; ++i)
             {
-                AddItemAtLast(binder);
+                AddItemAtLast(binder, createNewInstance);
             }
 
             for (var i = 0; i < -diff; ++i)
@@ -88,7 +88,7 @@ namespace RosettaUI
             
             var itemType = ListUtility.GetItemType(binder.ValueType);
             
-            list = ListUtility.AddItem(list, itemType, list[index], index + 1);
+            list = ListUtility.AddCopiedItem(list, itemType, list[index], index + 1);
             binder.SetObject(list);
         }
 
@@ -102,14 +102,16 @@ namespace RosettaUI
             binder.SetObject(list);
         }
 
-        public static void AddItemAtLast(IBinder binder)
+        public static void AddItemAtLast(IBinder binder, Func<object> createNewInstance = null)
         {
             var list = GetIList(binder);
             
             var listType = binder.ValueType;
             var itemType = ListUtility.GetItemType(binder.ValueType);
 
-            list = ListUtility.AddItemAtLast(list, listType, itemType);
+            list = createNewInstance == null
+                ? ListUtility.AddCopiedItemAtLast(list, listType, itemType)
+                : ListUtility.AddItemAtLast(list, listType, itemType, createNewInstance.Invoke());
             binder.SetObject(list);
         }
 
