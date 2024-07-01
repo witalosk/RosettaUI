@@ -524,14 +524,11 @@ MonoBehaviour:
   simpleClass:
     floatValue: 0
     stringValue: 
-  serializeReferenceClass:
-    rid: 5014202388692336645
+  interfaceField:
+    rid: 5396231579569750016
   classList:
   - floatValue: 1
     stringValue: First
-  serializeReferenceClassList:
-  - rid: 5014202388692336646
-  - rid: 5014202388692336647
   attributeExampleClass:
     headerInt: 0
     rangeFloat: 50
@@ -546,18 +543,10 @@ MonoBehaviour:
   references:
     version: 2
     RefIds:
-    - rid: 5014202388692336645
-      type: {class: SerializeReferenceClassA, ns: RosettaUI.Example, asm: Assembly-CSharp}
+    - rid: 5396231579569750016
+      type: {class: ConcreteClassA, ns: RosettaUI.Example, asm: Assembly-CSharp}
       data:
-        floatValue: 1
-    - rid: 5014202388692336646
-      type: {class: SerializeReferenceClassA, ns: RosettaUI.Example, asm: Assembly-CSharp}
-      data:
-        floatValue: 1
-    - rid: 5014202388692336647
-      type: {class: SerializeReferenceClassB, ns: RosettaUI.Example, asm: Assembly-CSharp}
-      data:
-        stringValue: second
+        floatValue: 0
 --- !u!1 &705507993
 GameObject:
   m_ObjectHideFlags: 0
@@ -718,6 +707,7 @@ Transform:
   - {fileID: 1740173063}
   - {fileID: 1922449324}
   - {fileID: 1850636928}
+  - {fileID: 1939868766}
   - {fileID: 554616669}
   - {fileID: 1954015388}
   - {fileID: 544456411}
@@ -1324,6 +1314,78 @@ MonoBehaviour:
     Min: 0
     Max: 0
   vector2Value: {x: 0, y: 0}
+--- !u!1 &1939868765
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1939868766}
+  - component: {fileID: 1939868767}
+  m_Layer: 0
+  m_Name: AbstractFieldExample
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1939868766
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1939868765}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 852668086}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1939868767
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1939868765}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1bb05ac8b0ad4776acb731b377e2514f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _interfaceField:
+    rid: 5396231579662811141
+  _interfaceList:
+  - rid: 5396231579662811142
+  - rid: 5396231579662811143
+  - rid: 5396231579662811144
+  - rid: -2
+  references:
+    version: 2
+    RefIds:
+    - rid: -2
+      type: {class: , ns: , asm: }
+    - rid: 5396231579662811141
+      type: {class: ConcreteClassA, ns: RosettaUI.Example, asm: Assembly-CSharp}
+      data:
+        floatValue: 1
+    - rid: 5396231579662811142
+      type: {class: ConcreteClassA, ns: RosettaUI.Example, asm: Assembly-CSharp}
+      data:
+        floatValue: 1
+    - rid: 5396231579662811143
+      type: {class: ConcreteClassB, ns: RosettaUI.Example, asm: Assembly-CSharp}
+      data:
+        stringValue: 2
+    - rid: 5396231579662811144
+      type: {class: ConcreteClassA, ns: RosettaUI.Example, asm: Assembly-CSharp}
+      data:
+        floatValue: 3
 --- !u!1 &1954015387
 GameObject:
   m_ObjectHideFlags: 0

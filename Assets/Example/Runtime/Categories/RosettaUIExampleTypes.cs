@@ -18,16 +18,16 @@ namespace RosettaUI.Example
         private int _privateValue; // will be ignored
     }
 
-    public interface ISerializeReferenceObject { }
+    public interface IMyInterface { }
     
     [Serializable]
-    public class SerializeReferenceClassA : ISerializeReferenceObject
+    public class ConcreteClassA : IMyInterface
     {
         public float floatValue;
     }
     
     [Serializable]
-    public class SerializeReferenceClassB : ISerializeReferenceObject
+    public class ConcreteClassB : IMyInterface
     {
         public string stringValue;
     }

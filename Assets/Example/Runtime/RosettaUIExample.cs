@@ -16,6 +16,7 @@ namespace RosettaUI.Example
             typeof(SliderExample),
             typeof(MinMaxSliderExample),
             typeof(ListExample),
+            typeof(AbstractExample),
             typeof(LayoutExample),
             typeof(WindowAndDynamicExample),
             typeof(MiscExample),

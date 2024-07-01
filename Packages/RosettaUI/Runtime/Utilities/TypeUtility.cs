@@ -186,6 +186,7 @@ namespace RosettaUI
         
         #endregion
 
+        
         #region Concrete Type
         
         private static readonly Dictionary<Type, List<Type>> ConcreteTypeCacheTable = new();
