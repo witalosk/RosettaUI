@@ -180,6 +180,7 @@ namespace RosettaUI
         public static Element ListCounterField(IBinder listBinder,　Element itemContainerElement, in ListViewOption option)
         {
             var interactable = !ListBinder.IsReadOnly(listBinder) && !option.fixedSize;
+            var newItemFactory = option.newItemFactory;
 
             return Field(null,
                 () => ListBinder.GetCount(listBinder),
@@ -194,7 +195,7 @@ namespace RosettaUI
                     }
                     else
                     {
-                        ListBinder.SetCount(listBinder, count);
+                        ListBinder.SetCount(listBinder, count, newItemFactory);
                     }
                 },
                 new FieldOption { delayInput = true }

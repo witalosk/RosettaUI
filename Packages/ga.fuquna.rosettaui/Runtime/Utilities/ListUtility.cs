@@ -29,15 +29,15 @@ namespace RosettaUI
             }
 
             return itemType;
-        } 
-        
-        public static IList AddItemAtLast(IList list, Type type, Type itemType)
+        }
+
+        public static IList AddItemAtLast(IList list, Type type, Type itemType, Func<object> newItemFactory)
         {
             list ??= (IList) Activator.CreateInstance(type);
 
             var baseItem = list.Count > 0 ? list[^1] : null;
 
-            return AddItem(list, itemType, baseItem, list.Count);
+            return AddItem(list, itemType, baseItem, list.Count, newItemFactory);
         }
 
         public static IList RemoveItemAtLast(IList target, Type itemType)
@@ -45,10 +45,10 @@ namespace RosettaUI
             return RemoveItem(target, itemType, target.Count - 1);
         }
 
-        public static IList AddItem(IList list, Type elemType, object baseItem, int index)
+        public static IList AddItem(IList list, Type elemType, object baseItem, int index, Func<object> newItemFactory)
         {
             index = Mathf.Clamp(index, 0, list.Count);
-            var newElem = CreateNewItem(baseItem, elemType);
+            var newElem = CreateNewItem(baseItem, elemType, newItemFactory);
 
             if (list is Array array)
             {
@@ -85,7 +85,7 @@ namespace RosettaUI
 
 
 
-        static object CreateNewItem(object baseItem, Type itemType)
+        static object CreateNewItem(object baseItem, Type itemType, Func<object> newItemGetter)
         {
             object ret = null;
 
@@ -109,9 +109,10 @@ namespace RosettaUI
 
             if (ret == null)
             {
-                ret = (itemType == typeof(string))
+                ret = newItemGetter?.Invoke();
+                ret ??= ((itemType == typeof(string))
                     ? ""
-                    : Activator.CreateInstance(itemType);
+                    : Activator.CreateInstance(itemType));
             }
 
             return ret;

@@ -54,13 +54,13 @@ namespace RosettaUI
             return GetIList(binder)?.Count ?? 0;
         }
 
-        public static void SetCount(IBinder binder, int count)
+        public static void SetCount(IBinder binder, int count, Func<object> newItemFactory)
         {
             var current = GetCount(binder);
             var diff = count - current;
             for (var i = 0; i < diff; ++i)
             {
-                AddItemAtLast(binder);
+                AddItemAtLast(binder, newItemFactory);
             }
 
             for (var i = 0; i < -diff; ++i)
@@ -82,13 +82,13 @@ namespace RosettaUI
         public static bool IsReadOnly(IBinder binder) => binder.IsReadOnly || (GetIList(binder)?.IsReadOnly ?? false);
 
 
-        public static void DuplicateItem(IBinder binder, int index)
+        public static void DuplicateItem(IBinder binder, int index, Func<object> newItemFactory)
         {
             var list = GetIList(binder);
-            
+
             var itemType = ListUtility.GetItemType(binder.ValueType);
-            
-            list = ListUtility.AddItem(list, itemType, list[index], index + 1);
+
+            list = ListUtility.AddItem(list, itemType, list[index], index + 1, newItemFactory);
             binder.SetObject(list);
         }
 
@@ -102,14 +102,14 @@ namespace RosettaUI
             binder.SetObject(list);
         }
 
-        public static void AddItemAtLast(IBinder binder)
+        public static void AddItemAtLast(IBinder binder, Func<object> newItemFactory)
         {
             var list = GetIList(binder);
-            
+
             var listType = binder.ValueType;
             var itemType = ListUtility.GetItemType(binder.ValueType);
 
-            list = ListUtility.AddItemAtLast(list, listType, itemType);
+            list = ListUtility.AddItemAtLast(list, listType, itemType, newItemFactory);
             binder.SetObject(list);
         }
 

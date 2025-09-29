@@ -60,7 +60,7 @@ namespace RosettaUI
                     }
                 }
 
-                ListBinder.SetCount(_binder, value);
+                ListBinder.SetCount(_binder, value, option.newItemFactory);
                 NotifyListChangedToView();
             }
         }
@@ -146,7 +146,7 @@ namespace RosettaUI
 
             void DuplicateItem()
             {
-                ListBinder.DuplicateItem(_binder, index);
+                ListBinder.DuplicateItem(_binder, index, option.newItemFactory);
                 OnItemIndexShiftPlus(index + 1);
                 
                 NotifyListChangedToView();

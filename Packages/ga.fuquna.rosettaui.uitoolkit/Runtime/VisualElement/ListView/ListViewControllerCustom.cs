@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using UnityEngine.Pool;
 using UnityEngine.UIElements;
 
@@ -9,6 +10,8 @@ namespace RosettaUI.UIToolkit
     /// </summary>
     public class ListViewControllerCustom : ListViewController
     {
+        public Func<object> newItemFactory { get; set; }
+
         public override void AddItems(int itemCount)
         {
             if (itemCount <= 0) return;
@@ -21,7 +24,7 @@ namespace RosettaUI.UIToolkit
                 var itemType = ListUtility.GetItemType(type);
                 for (var i = 0; i < itemCount; ++i)
                 {
-                    itemsSource = ListUtility.AddItemAtLast(itemsSource, type, itemType);
+                    itemsSource = ListUtility.AddItemAtLast(itemsSource, type, itemType, newItemFactory);
                     intList.Add(previousCount + i);
                 }
                 
